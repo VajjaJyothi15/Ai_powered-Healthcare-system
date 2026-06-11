@@ -210,6 +210,30 @@ CREATE TABLE IF NOT EXISTS report_analysis(
 )
 """)
     cursor.execute("""
+CREATE TABLE IF NOT EXISTS disease_predictions(
+    prediction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    patient_user_id INTEGER,
+    disease_type TEXT,
+    prediction TEXT,
+    risk_score REAL,
+    severity TEXT,
+    prediction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(patient_user_id) REFERENCES users(id)
+)
+""")
+    cursor.execute("""
+CREATE TABLE IF NOT EXISTS outcome_predictions(
+    prediction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    patient_user_id INTEGER,
+    recovery_probability REAL,
+    icu_requirement TEXT,
+    mortality_risk TEXT,
+    expected_stay INTEGER,
+    prediction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(patient_user_id) REFERENCES users(id)
+)
+""")
+    cursor.execute("""
 CREATE TABLE IF NOT EXISTS emergency_alerts(
     alert_id INTEGER PRIMARY KEY AUTOINCREMENT,
     patient_user_id INTEGER,

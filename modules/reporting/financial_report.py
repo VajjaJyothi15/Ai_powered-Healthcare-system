@@ -12,10 +12,12 @@ def get_financial_report():
         df = pd.read_sql_query(
             """
             SELECT
-                patient_user_id,
+                user_id AS patient_user_id,
                 insurance_provider,
-                policy_number
-            FROM insurance
+                insurance_number AS policy_number
+            FROM patients
+            WHERE insurance_provider IS NOT NULL
+               OR insurance_number IS NOT NULL
             """,
             conn
         )

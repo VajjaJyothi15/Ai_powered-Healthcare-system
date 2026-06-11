@@ -1,5 +1,7 @@
 import streamlit as st
 
+from config.database import get_connection
+
 from modules.disease_prediction.diabetes_model import (
     predict_diabetes
 )
@@ -110,3 +112,28 @@ def disease_prediction_page():
             "Severity",
             result['severity']
         )
+
+        user_id = st.session_state.get("user_id")
+        if user_id:
+            conn = get_connection()
+            conn.execute(
+                """
+                INSERT INTO disease_predictions(
+                    patient_user_id,
+                    disease_type,
+                    prediction,
+                    risk_score,
+                    severity
+                )
+                VALUES(?,?,?,?,?)
+                """,
+                (
+                    user_id,
+                    disease_type,
+                    result["prediction"],
+                    result["risk_score"],
+                    result["severity"],
+                ),
+            )
+            conn.commit()
+            conn.close()

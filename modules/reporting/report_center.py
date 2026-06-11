@@ -76,5 +76,5 @@ def report_center_page():
 
     if st.button("Save Excel Copy"):
         filename = _safe_filename(report_type, "xlsx")
-        generate_excel_report(df, filename)
-        st.success(f"Excel copy saved as {filename}.")
+        saved_path = generate_excel_report(df, filename)
+        st.success(f"Excel copy saved to {saved_path}.")

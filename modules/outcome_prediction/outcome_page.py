@@ -1,5 +1,7 @@
 import streamlit as st
 
+from config.database import get_connection
+
 from modules.outcome_prediction.recovery_model import (
     predict_recovery
 )
@@ -100,3 +102,28 @@ def outcome_prediction_page():
         st.success(
             "Outcome Prediction Completed"
         )
+
+        user_id = st.session_state.get("user_id")
+        if user_id:
+            conn = get_connection()
+            conn.execute(
+                """
+                INSERT INTO outcome_predictions(
+                    patient_user_id,
+                    recovery_probability,
+                    icu_requirement,
+                    mortality_risk,
+                    expected_stay
+                )
+                VALUES(?,?,?,?,?)
+                """,
+                (
+                    user_id,
+                    recovery,
+                    icu,
+                    mortality,
+                    stay,
+                ),
+            )
+            conn.commit()
+            conn.close()

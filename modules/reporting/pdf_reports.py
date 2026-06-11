@@ -1,4 +1,5 @@
 from io import BytesIO
+from pathlib import Path
 
 import pandas as pd
 from reportlab.lib import colors
@@ -11,6 +12,9 @@ from reportlab.platypus import (
     Table,
     TableStyle,
 )
+
+
+REPORT_DIR = Path("reports") / "pdf"
 
 
 def _dataframe_to_table_data(dataframe, max_rows=40):
@@ -67,8 +71,14 @@ def _build_pdf(target, title, dataframe):
 
 
 def generate_pdf_report(filename, title, content):
-    _build_pdf(filename, title, content)
-    return filename
+    REPORT_DIR.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    target = REPORT_DIR / filename
+    _build_pdf(str(target), title, content)
+    return str(target)
 
 
 def generate_pdf_report_bytes(title, dataframe):
