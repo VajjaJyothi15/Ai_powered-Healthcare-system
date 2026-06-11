@@ -1,5 +1,9 @@
 import pandas as pd
-import plotly.express as px
+
+try:
+    import plotly.express as px
+except ModuleNotFoundError:
+    px = None
 
 
 def _has_columns(df, columns):
@@ -9,7 +13,7 @@ def _has_columns(df, columns):
 
 
 def appointment_chart(df):
-    if not _has_columns(df, ["status"]):
+    if px is None or not _has_columns(df, ["status"]):
         return None
 
     summary = (
@@ -30,7 +34,7 @@ def appointment_chart(df):
 
 
 def bed_chart(df):
-    if not _has_columns(df, ["status"]):
+    if px is None or not _has_columns(df, ["status"]):
         return None
 
     summary = (
@@ -51,7 +55,7 @@ def bed_chart(df):
 
 
 def resource_chart(df):
-    if not _has_columns(df, ["resource_type", "available_quantity"]):
+    if px is None or not _has_columns(df, ["resource_type", "available_quantity"]):
         return None
 
     summary = (

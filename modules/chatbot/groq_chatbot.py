@@ -1,15 +1,21 @@
-from groq import Groq
+from config.settings import GROQ_API_KEY
 
-from config.settings import (
-    GROQ_API_KEY
-)
+try:
+    from groq import Groq
+except ModuleNotFoundError:
+    Groq = None
 
-client = Groq(
-    api_key=GROQ_API_KEY
-)
+
+client = Groq(api_key=GROQ_API_KEY) if Groq and GROQ_API_KEY else None
 
 
 def get_ai_response(prompt):
+
+    if client is None:
+        return (
+            "The advanced chatbot is unavailable in this environment. "
+            "I can still help with appointments, symptoms, medicines, and reports."
+        )
 
     completion = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
